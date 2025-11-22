@@ -1,8 +1,8 @@
-"""create exercise/workout tables
+"""initial schema with constraints
 
-Revision ID: a0209cfb15c5
+Revision ID: 8ced61c175e1
 Revises: 
-Create Date: 2025-11-22 09:24:14.517262
+Create Date: 2025-11-22 11:13:07.865019
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'a0209cfb15c5'
+revision = '8ced61c175e1'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -23,13 +23,15 @@ def upgrade():
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('category', sa.String(), nullable=False),
     sa.Column('equipment_needed', sa.Boolean(), nullable=False),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('name')
     )
     op.create_table('workouts',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('date', sa.Date(), nullable=False),
     sa.Column('duration_minutes', sa.Integer(), nullable=False),
     sa.Column('notes', sa.Text(), nullable=True),
+    sa.CheckConstraint('duration_minutes > 0', name='check_workout_duration_positive'),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('workout_exercises',
@@ -39,6 +41,9 @@ def upgrade():
     sa.Column('reps', sa.Integer(), nullable=True),
     sa.Column('sets', sa.Integer(), nullable=True),
     sa.Column('duration_seconds', sa.Integer(), nullable=True),
+    sa.CheckConstraint('duration_seconds IS NULL OR duration_seconds >= 0', name='check_duration_non_negative'),
+    sa.CheckConstraint('reps IS NULL OR reps >= 0', name='check_reps_non_negative'),
+    sa.CheckConstraint('sets IS NULL OR sets >= 0', name='check_sets_non_negative'),
     sa.ForeignKeyConstraint(['exercise_id'], ['exercises.id'], ),
     sa.ForeignKeyConstraint(['workout_id'], ['workouts.id'], ),
     sa.PrimaryKeyConstraint('id')
