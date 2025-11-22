@@ -1,27 +1,27 @@
 # Flask SQLAlchemy Workout Application Backend
 
 A Flask backend application for managing workouts, exercises, and
-workout--exercise associations. This project uses SQLAlchemy,
+workout/exercise relations. This project uses SQLAlchemy,
 Flask-Migrate, and Marshmallow for ORM, migrations, and schema
 validation.
 
-## 📌 Features
+## Features
 
 -   Full CRUD for **Workouts**
 -   Full CRUD for **Exercises**
 -   Ability to **add specific exercises** to a workout with
     reps/sets/duration
 -   SQLite relational database with:
-    -   1--many (Workout → WorkoutExercises)
-    -   1--many (Exercise → WorkoutExercises)
-    -   many--many convenience relationships
+    -   1 <-> many (Workout → WorkoutExercises)
+    -   1 <-> many (Exercise → WorkoutExercises)
+    -   many <-> many convenience relationships
 -   Model-level validations (`@validates`)
 -   Schema-level validations (Marshmallow)
 -   Table constraints (unique + check constraints)
 -   Database seeding (`seed.py`)
 -   Full API documentation
 
-## 🛠️ Technologies
+## Requirements
 
 -   Python 3.12
 -   Flask 2.2+
@@ -30,7 +30,7 @@ validation.
 -   Marshmallow / Marshmallow-SQLAlchemy
 -   SQLite (app.db)
 
-## 🚀 Setup Instructions
+## Setup Instructions
 
 ### 1. Install dependencies
 
@@ -62,40 +62,43 @@ flask db upgrade
 python -m server.seed
 ```
 
-## 📚 Database Models
+## Database Models
 
 ### **Exercise**
 
-  Field              Type      Notes
-  ------------------ --------- ------------------
-  id                 Integer   Primary key
-  name               String    Required, unique
-  category           String    Required
-  equipment_needed   Boolean   Required
+| Field            | Type    | Notes            |
+| ---------------- | ------- | ---------------- |
+| id               | Integer | Primary key      |
+| name             | String  | Required, unique |
+| category         | String  | Required         |
+| equipment_needed | Boolean | Required         |
+
 
 ### **Workout**
 
-  Field              Type      Notes
-  ------------------ --------- -------------------
-  id                 Integer   Primary key
-  date               Date      Required
-  duration_minutes   Integer   Positive required
-  notes              Text      Optional
+| Field            | Type    | Notes             |
+| ---------------- | ------- | ----------------- |
+| id               | Integer | Primary key       |
+| date             | Date    | Required          |
+| duration_minutes | Integer | Positive required |
+| notes            | Text    | Optional          |
+
 
 ### **WorkoutExercise**
 
-  Field              Type      Notes
-  ------------------ --------- --------------------------------
-  id                 Integer   Primary key
-  workout_id         Integer   FK → Workout.id
-  exercise_id        Integer   FK → Exercise.id
-  reps               Integer   Optional, positive if provided
-  sets               Integer   Optional, positive if provided
-  duration_seconds   Integer   Optional, positive if provided
+| Field            | Type    | Notes                          |
+| ---------------- | ------- | ------------------------------ |
+| id               | Integer | Primary key                    |
+| workout_id       | Integer | FK → Workout.id                |
+| exercise_id      | Integer | FK → Exercise.id               |
+| reps             | Integer | Optional, positive if provided |
+| sets             | Integer | Optional, positive if provided |
+| duration_seconds | Integer | Optional, positive if provided |
 
-## 📡 API Endpoints
 
-### 🏋️ Workouts
+## API Endpoints
+
+### Workouts
 
 #### GET /workouts
 
@@ -123,7 +126,7 @@ Deletes a workout.
 
 ------------------------------------------------------------------------
 
-### 🏃 Exercises
+### Exercises
 
 #### GET /exercises
 
@@ -147,7 +150,7 @@ Returns a single exercise.
 
 ------------------------------------------------------------------------
 
-### 🔗 WorkoutExercise
+### WorkoutExercise
 
 #### POST /workouts/:workout_id/exercises/:exercise_id/workout_exercises
 
@@ -165,7 +168,7 @@ or:
 
 ------------------------------------------------------------------------
 
-## 🌱 Seeding
+## Seeding
 
 ``` bash
 python -m server.seed
@@ -176,15 +179,3 @@ Verify:
 ``` bash
 python -m server.check_seed
 ```
-
-## 🧪 Developer Utilities
-
-Ignored by Git:
-
--   prototest.py
--   check_seed.py
-
-## ✔️ Status
-
-Backend complete. All models, migrations, validations, seed data,
-schemas, and endpoints fully implemented.
