@@ -1,9 +1,12 @@
 # server/app.py
 
+from sqlite3 import IntegrityError
 from flask import Flask, jsonify, request
 from flask_migrate import Migrate
+from marshmallow import ValidationError
 
 from .models import db, Workout, Exercise, WorkoutExercise
+from .schemas import WorkoutSchema, ExerciseSchema, WorkoutExerciseSchema
 
 app = Flask(__name__)
 
@@ -15,10 +18,25 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db.init_app(app)
 migrate = Migrate(app, db)
 
+# Schema instances
+exercise_schema = ExerciseSchema()
+exercises_schema = ExerciseSchema(many=True)
+
+workout_schema = WorkoutSchema()
+workouts_schema = WorkoutSchema(many=True)
+
+workout_exercise_schema = WorkoutExerciseSchema()
+workout_exercises_schema = WorkoutExerciseSchema(many=True)
+
 
 # ------------------------
 # Basic routes
 # ------------------------
+def not_found(message="Resource not found"):
+    """Helper for 404 responses."""
+    return jsonify({"message": message}), 404
+
+
 @app.route("/")
 def index():
     return jsonify({"message": "Workout API backend is running."}), 200
@@ -29,35 +47,52 @@ def index():
 # ------------------------
 @app.route("/workouts", methods=["GET"])
 def get_workouts():
-    # TODO: implement real logic w/ schemas
-    return jsonify({"message": "GET /workouts not implemented yet"}), 200
+    """Get all workouts."""
+    workouts = Workout.query.all()
+    return jsonify(workouts_schema.dump(workouts)), 200
 
 
 @app.route("/workouts/<int:id>", methods=["GET"])
 def get_workout(id):
-    # TODO: implement real logic w/ schemas
-    return jsonify({"message": f"GET /workouts/{id} not implemented yet"}), 200
+    """Get a single workout by ID."""
+    workout = Workout.query.get(id)
+    if not workout:
+        return not_found("Workout not found")
+    return jsonify(workout_schema.dump(workout)), 200
 
 
 @app.route("/workouts", methods=["POST"])
 def create_workout():
-    # TODO: implement creation w/ schema validation
-    data = request.get_json() or {}
-    return (
-        jsonify(
-            {
-                "message": "POST /workouts not implemented yet",
-                "received": data,
-            }
-        ),
-        201,
-    )
+    """Create a new workout."""
+    json_data = request.get_json() or {}
+
+    try:
+        data = workout_schema.load(json_data)
+    except ValidationError as err:
+        return jsonify({"message": "Invalid data", "errors": err.messages}), 400
+
+    if isinstance(data, dict):
+        workout = Workout(**data)
+    else:
+        workout = data
+
+    db.session.add(workout)
+    db.session.commit()
+
+    return jsonify(workout_schema.dump(workout)), 201
 
 
 @app.route("/workouts/<int:id>", methods=["DELETE"])
 def delete_workout(id):
-    # TODO: implement real delete logic
-    return jsonify({"message": f"DELETE /workouts/{id} not implemented yet"}), 200
+    """Delete a workout by ID."""
+    workout = Workout.query.get(id)
+    if not workout:
+        return not_found("Workout not found")
+
+    db.session.delete(workout)
+    db.session.commit()
+
+    return "", 204
 
 
 # ------------------------
@@ -65,35 +100,64 @@ def delete_workout(id):
 # ------------------------
 @app.route("/exercises", methods=["GET"])
 def get_exercises():
-    # TODO: implement real logic w/ schemas
-    return jsonify({"message": "GET /exercises not implemented yet"}), 200
+    """Get all exercises."""
+    exercises = Exercise.query.all()
+    return jsonify(exercises_schema.dump(exercises)), 200
 
 
 @app.route("/exercises/<int:id>", methods=["GET"])
 def get_exercise(id):
-    # TODO: implement real logic w/ schemas
-    return jsonify({"message": f"GET /exercises/{id} not implemented yet"}), 200
+    """Get a single exercise by ID."""
+    exercise = Exercise.query.get(id)
+    if not exercise:
+        return not_found("Exercise not found")
+
+    return jsonify(exercise_schema.dump(exercise)), 200
 
 
 @app.route("/exercises", methods=["POST"])
 def create_exercise():
-    # TODO: implement creation w/ schema validation
-    data = request.get_json() or {}
-    return (
-        jsonify(
-            {
-                "message": "POST /exercises not implemented yet",
-                "received": data,
-            }
-        ),
-        201,
-    )
+    """Create a new exercise."""
+    json_data = request.get_json() or {}
+
+    try:
+        data = exercise_schema.load(json_data)
+    except ValidationError as err:
+        return jsonify({"message": "Invalid data", "errors": err.messages}), 400
+
+    if isinstance(data, dict):
+        exercise = Exercise(**data)
+    else:
+        exercise = data
+
+    db.session.add(exercise)
+
+    try:
+        db.session.commit()
+    except IntegrityError:
+        db.session.rollback()
+        return (
+            jsonify(
+                {
+                    "message": "Exercise with this name already exists.",
+                }
+            ),
+            400,
+        )
+
+    return jsonify(exercise_schema.dump(exercise)), 201
 
 
 @app.route("/exercises/<int:id>", methods=["DELETE"])
 def delete_exercise(id):
-    # TODO: implement real delete logic
-    return jsonify({"message": f"DELETE /exercises/{id} not implemented yet"}), 200
+    """Delete an exercise by ID."""
+    exercise = Exercise.query.get(id)
+    if not exercise:
+        return not_found("Exercise not found")
+
+    db.session.delete(exercise)
+    db.session.commit()
+    return "", 204
 
 
 # ------------------------
@@ -104,19 +168,33 @@ def delete_exercise(id):
     methods=["POST"],
 )
 def add_workout_exercise(workout_id, exercise_id):
-    # TODO: implement creation of WorkoutExercise via schema
-    data = request.get_json() or {}
-    return (
-        jsonify(
-            {
-                "message": "POST join workout/exercise not implemented yet",
-                "workout_id": workout_id,
-                "exercise_id": exercise_id,
-                "received": data,
-            }
-        ),
-        201,
-    )
+    """Create a WorkoutExercise join record."""
+    workout = Workout.query.get(workout_id)
+    if not workout:
+        return not_found("Workout not found")
+
+    exercise = Exercise.query.get(exercise_id)
+    if not exercise:
+        return not_found("Exercise not found")
+
+    json_data = request.get_json() or {}
+    json_data["workout_id"] = workout_id
+    json_data["exercise_id"] = exercise_id
+
+    try:
+        data = workout_exercise_schema.load(json_data)
+    except ValidationError as err:
+        return jsonify({"message": "Invalid data", "errors": err.messages}), 400
+
+    if isinstance(data, dict):
+        join_record = WorkoutExercise(**data)
+    else:
+        join_record = data
+
+    db.session.add(join_record)
+    db.session.commit()
+
+    return jsonify(workout_exercise_schema.dump(join_record)), 201
 
 
 if __name__ == "__main__":
