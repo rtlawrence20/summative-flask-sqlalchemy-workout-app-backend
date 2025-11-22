@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "d408e4f95f9288fa3c021f63e35b3828e38ff7c0705f2dec9b78eba83350694a"
+            "sha256": "dd9dea36ff44efbab15a5fa8a8f50954f347c374018a9fc5cda8c2a4e28305c6"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -45,7 +45,7 @@
                 "sha256:65f266143752f734b0a7cc83c46f4618af75b8c5911b00ccb61d0ac9b6da0360",
                 "sha256:d316bb415a2d9e2d2b3abcc4084c6502fc09240e292cd76a76afc106a1c8e04a"
             ],
-            "markers": "python_version > '3.6'",
+            "markers": "python_version >= '3.7'",
             "version": "==5.2.1"
         },
         "executing": {
@@ -186,7 +186,7 @@
                 "sha256:5f6de88c905a566c6a9d6c400a8fed54a638e1f7543d17aae2551133216b1e4e",
                 "sha256:bce8ac85eb9521adc94e1845b4c03d88365fd6ac2f4908ec4ed1eb1b0a065f9f"
             ],
-            "markers": "python_version > '3.6'",
+            "markers": "python_version >= '3.7'",
             "version": "==9.7.0"
         },
         "ipython-pygments-lexers": {
@@ -333,6 +333,15 @@
             "markers": "python_version >= '3.8'",
             "version": "==3.20.1"
         },
+        "marshmallow-sqlalchemy": {
+            "hashes": [
+                "sha256:6410304bf98ec26ea35f3f9d3cee82e51fd093c434612add32a0bdcdb5668f7c",
+                "sha256:65aee301c4601e76a2fdb02764a65c18913afba2a3506a326c625d13ab405b40"
+            ],
+            "index": "pypi",
+            "markers": "python_version >= '3.9'",
+            "version": "==1.4.2"
+        },
         "matplotlib-inline": {
             "hashes": [
                 "sha256:d56ce5156ba6085e00a9d54fead6ed29a9c47e215cd1bba2e976ef39f5710a76",
@@ -478,7 +487,7 @@
                 "sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b",
                 "sha256:b3bda1d108d5dd99f4a20d24d9c348e91c4db7ab1b749200bded2f839ccbe68f"
             ],
-            "markers": "python_version > '3.6'",
+            "markers": "python_version >= '3.7'",
             "version": "==0.10.2"
         },
         "traitlets": {

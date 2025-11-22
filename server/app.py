@@ -4,6 +4,7 @@ from flask import Flask, jsonify, request
 from flask_migrate import Migrate
 
 from .models import db, Workout, Exercise, WorkoutExercise
+from .schemas import WorkoutSchema, ExerciseSchema, WorkoutExerciseSchema
 
 app = Flask(__name__)
 
