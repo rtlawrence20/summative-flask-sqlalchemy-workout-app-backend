@@ -86,7 +86,7 @@ pipenv shell
 
 ```bash
 cd server
-export FLASK_APP=server.app
+export FLASK_APP=app.py
 export FLASK_RUN_PORT=5555
 flask db upgrade
 cd ..
