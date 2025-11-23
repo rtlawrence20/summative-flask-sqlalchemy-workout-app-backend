@@ -86,20 +86,22 @@ pipenv shell
 
 ```bash
 cd server
-export FLASK_APP=app.py
+export FLASK_APP=app
 export FLASK_RUN_PORT=5555
 flask db upgrade
+cd ..
 ```
 
 ### 3. Seed the database
 
 ```bash
-python -m seed
+python -m server.seed
 ```
 
 ### 4. Run the server
 
 ```bash
+cd server
 flask run
 ```
 
