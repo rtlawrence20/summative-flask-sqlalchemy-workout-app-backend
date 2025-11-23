@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "264bf3fca458ef2f98d2f0d83d4f98e7b8245d63eb74f2494fe6ce76de883df0"
+            "sha256": "5099f4047a08d79b0a34272499b5c22c37daf1a5f146ea4588102cf04908f36c"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -382,6 +382,12 @@
             "markers": "python_version >= '3.6'",
             "version": "==0.8.5"
         },
+        "peewee": {
+            "hashes": [
+                "sha256:62c3d93315b1a909360c4b43c3a573b47557a1ec7a4583a71286df2a28d4b72e"
+            ],
+            "version": "==3.18.3"
+        },
         "pexpect": {
             "hashes": [
                 "sha256:7236d1e080e4936be2dc3e326cec0af72acf9212a7e1d060210e70a47e253523",
@@ -516,6 +522,13 @@
             ],
             "markers": "python_version >= '3.7'",
             "version": "==2.0.44"
+        },
+        "sqlite-web": {
+            "hashes": [
+                "sha256:fc0b2abb65c45424b9b055b6181fd6fe29edd60099208819abccab7afa10ed8a"
+            ],
+            "index": "pypi",
+            "version": "==0.6.5"
         },
         "stack-data": {
             "hashes": [

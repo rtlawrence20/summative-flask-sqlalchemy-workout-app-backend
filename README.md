@@ -30,6 +30,36 @@ validation.
 -   Marshmallow / Marshmallow-SQLAlchemy
 -   SQLite (app.db)
 
+## Structure
+```
+├── Pipfile
+├── Pipfile.lock
+├── README.md
+├── instance
+│   └── app.db
+├── server
+│   ├── __init__.py
+│   ├── app.py
+│   ├── check_seed.py
+│   ├── migrations
+│   │   ├── README
+│   │   ├── alembic.ini
+│   │   ├── env.py
+│   │   ├── script.py.mako
+│   │   └── versions
+│   │       └── 8ced61c175e1_initial_schema_with_constraints.py
+│   ├── models.py
+│   ├── schemas.py
+│   ├── seed.py
+│   └── wiring_test.py
+├── tests
+│   ├── conftest.py
+│   ├── test_models.py
+│   ├── test_routes.py
+│   ├── test_schemas.py
+│   └── test_seed.py
+```
+
 ## Setup Instructions
 
 ### 1. Install dependencies
