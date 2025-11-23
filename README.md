@@ -85,11 +85,9 @@ pipenv shell
 ### 2. Set Flask environment variables and apply migrations
 
 ```bash
-cd server
-export FLASK_APP=app
+export FLASK_APP=server.app
 export FLASK_RUN_PORT=5555
 flask db upgrade
-cd ..
 ```
 
 ### 3. Seed the database
@@ -101,7 +99,6 @@ python -m server.seed
 ### 4. Run the server
 
 ```bash
-cd server
 flask run
 ```
 
