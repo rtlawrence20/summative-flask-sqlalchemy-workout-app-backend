@@ -34,13 +34,13 @@ validation.
 ```
 ├── Pipfile
 ├── Pipfile.lock
+├── requirements.txt
 ├── README.md
 ├── instance
 │   └── app.db
 ├── server
 │   ├── __init__.py
 │   ├── app.py
-│   ├── check_seed.py
 │   ├── migrations
 │   │   ├── README
 │   │   ├── alembic.ini
@@ -50,8 +50,7 @@ validation.
 │   │       └── 8ced61c175e1_initial_schema_with_constraints.py
 │   ├── models.py
 │   ├── schemas.py
-│   ├── seed.py
-│   └── wiring_test.py
+│   └── seed.py
 ├── tests
 │   ├── conftest.py
 │   ├── test_models.py
@@ -60,37 +59,79 @@ validation.
 │   └── test_seed.py
 ```
 
+## Database Setup
+
+This project uses SQLite.  
+The active database file is always:
+
+```
+server/app.db
+```
+
+> **Note:** The database file is *not* committed to version control.  
+> Anyone cloning the project will create their own DB using migrations + seed script.
+
+---
+
 ## Setup Instructions
 
-### 1. Install dependencies
+### 2. Set Flask environment variables
 
-``` bash
-pipenv install
-pipenv shell
-```
+From project root:
 
-### 2. Environment variables
-
-Inside the `server/` directory:
-
-``` bash
-export FLASK_APP=app.py
+```bash
+export FLASK_APP=server.app
 export FLASK_RUN_PORT=5555
-export FLASK_DEBUG=1
 ```
 
-### 3. Initialize database
+### 3. Apply migrations
 
-``` bash
+```bash
 cd server
 flask db upgrade
+cd ..
 ```
 
 ### 4. Seed the database
 
-``` bash
+```bash
 python -m server.seed
 ```
+
+### 5. Run the server
+
+```bash
+flask run
+```
+
+---
+
+## Using sqlite-web to Inspect the Database
+
+You can view database tables, columns, and rows using **sqlite-web**
+
+### Open the database in sqlite-web
+
+From the **project root**:
+
+```bash
+sqlite_web server/app.db
+```
+
+Then visit the printed URL, usually:
+
+```
+http://127.0.0.1:8080
+```
+
+You should see tables:
+
+- `workouts`
+- `exercises`
+- `workout_exercises`
+- `alembic_version`
+
+---
 
 ## Database Models
 
@@ -198,14 +239,10 @@ or:
 
 ------------------------------------------------------------------------
 
-## Seeding
+## Running Tests
 
-``` bash
-python -m server.seed
-```
+Run the full test suite with:
 
-Verify:
-
-``` bash
-python -m server.check_seed
+```bash
+pytest
 ```
