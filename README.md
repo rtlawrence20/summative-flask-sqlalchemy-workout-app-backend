@@ -89,13 +89,12 @@ cd server
 export FLASK_APP=app.py
 export FLASK_RUN_PORT=5555
 flask db upgrade
-cd ..
 ```
 
 ### 3. Seed the database
 
 ```bash
-python -m server.seed
+python -m seed
 ```
 
 ### 4. Run the server
@@ -106,9 +105,18 @@ flask run
 
 ---
 
+### 5. Start new terminal to use endpoints (e.g., see below)
+
+```
+pipenv shell
+curl http://localhost:5555/
+curl http://localhost:5555/workouts
+curl http://localhost:5555/exercises
+```
+
 ## Using sqlite-web to Inspect the Database
 
-You can view database tables, columns, and rows using **sqlite-web**
+You can also view database tables, columns, and rows using **sqlite-web**
 
 ### Open the database in sqlite-web
 
