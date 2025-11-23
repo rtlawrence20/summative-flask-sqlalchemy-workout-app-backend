@@ -1,5 +1,5 @@
 # server/app.py
-
+import os
 from sqlalchemy.exc import IntegrityError
 from flask import Flask, jsonify, request
 from flask_migrate import Migrate
@@ -11,7 +11,8 @@ from .schemas import WorkoutSchema, ExerciseSchema, WorkoutExerciseSchema
 app = Flask(__name__)
 
 # DB config
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///app.db"
+basedir = os.path.abspath(os.path.dirname(__file__))
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(basedir, "app.db")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 # Init extensions

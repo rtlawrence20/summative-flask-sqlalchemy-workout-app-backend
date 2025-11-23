@@ -209,3 +209,8 @@ __marimo__/
 # Local dev prototyping scripts
 server/wiring_test.py
 server/check_seed.py
+
+# SQLite database
+server/app.db
+*.db
+instance/
