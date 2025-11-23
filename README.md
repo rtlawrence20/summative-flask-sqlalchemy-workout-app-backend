@@ -73,32 +73,32 @@ server/app.db
 
 ---
 
-## Setup Instructions
+## Initial Setup After Cloning
 
-### 2. Set Flask environment variables
-
-From project root:
+### 1. Install dependencies
 
 ```bash
-export FLASK_APP=server.app
-export FLASK_RUN_PORT=5555
+pipenv install
+pipenv shell
 ```
 
-### 3. Apply migrations
+### 2. Set Flask environment variables and apply migrations
 
 ```bash
 cd server
+export FLASK_APP=server.app
+export FLASK_RUN_PORT=5555
 flask db upgrade
 cd ..
 ```
 
-### 4. Seed the database
+### 3. Seed the database
 
 ```bash
 python -m server.seed
 ```
 
-### 5. Run the server
+### 4. Run the server
 
 ```bash
 flask run
